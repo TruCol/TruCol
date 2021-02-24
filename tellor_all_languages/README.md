@@ -1,11 +1,9 @@
 # Trucol Adaptation of Teller Sample Project
-This is a modification of the Tellor Sample Project repository to realise three functionalities using the Tellor Oracle system. These functionalities are to check if the latest commit to the bounty hunter fork of the sponsor repository:
+This is a modification of the Tellor Sample Project repository that: checks if a GitHub commit of the solution of the bounty hunter:
 
-0. passes the Travis CI build (and hence accompanying unit tests of the sponsor).
-1. did not add any files w.r.t. the code skeleton provided by the sponsor.
-2. did not tamper any of the test files created in the sponsor repository.
-
-To do this, instructions are included to simulate- and test a Tellor oracle network that performs those 3 queries and outputs the query-result to a sponsorcontract. These instructions are followed by instructions for the Travis API that is currently used by the simulated Tellor oracles to query the build status of the bounty hunter repo. Since the 3 queries are implemented in node.js test files the specification of these test files is included next. And an overview of the TODOs that remain before the new Tellor datafeed can be requested concludes this readme. 
+0. passes the Travis CI build based on the sponsor tests.
+1. did not add any (attack) files w.r.t. the code skeleton provided by the sponsor.
+2. did not tamper any files marked as *unmutable* by the sponsor.
 
 F.Y.I. The original readme of the unmodified source repository of the code in this folder is [here](https://github.com/tellor-io/sampleUsingTellor) and [this](https://docs.tellor.io/tellor/) is the documentation.
 
@@ -14,7 +12,7 @@ F.Y.I. The original readme of the unmodified source repository of the code in th
 0. Open Terminal, go to the root of the TruCol directory.
 1. Browse into this directory:
 ```
-cd oracles/sampleUsingTellor
+cd tellor_all_languages
 ```
 2. Install npm on device
 ```
@@ -28,88 +26,18 @@ npm install
 ```
 npm test
 ```
-5. Normally you could simulate your own local Tellor oracle network using the tellor playground, and then migrate your solidity contracts to interact over there in the tellor playground. Looking at the test files, this is already automated (and isn't required manually anymore).
-
-
-## Travis API Instructions
-Source: https://docs.travis-ci.com/user/triggering-builds/
-0. You need to login to use the Travis Api. You can do that by first getting a Travis token, by login in with git from your terminal:
-```
-travis login --com --auto
-```
-1. If that does not work(returning `Not Found`), you should add a GitHub Token manually.
-Source: https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token 
-   
-   1.1 To get this token, first [verify your github](https://docs.github.com/en/github/getting-started-with-github/verifying-your-email-address) email adress if you did not yet do that.
-   
-   1.2 Go to: https://github.com/settings/tokens
-   
-   1.3 Add a new token and select:
-   
-   - 1.3.1  repo control of private repositories
-   
-   - 1.3.2  admin:org control of orgs and teams, read and write org projects
-   
-   - 1.3.3  admin:repo_hook Full control of repository hooks
-   
-   - 1.3.4  admin:org_hook control of organization hooks
-   
-   1.4 Write down the secret personal access token from github. It can have a form like: `1somelettersandsomenumbersordigitsandth4`
-   
-   1.5 Next, use this token to login to either the `--pro`, `--com` or `--org` account types of Travis using:
-```
-travis login --pro --github-token 1somelettersandsomenumbersordigitsandth4
-travis login --com --github-token 1somelettersandsomenumbersordigitsandth4
-travis login --org --github-token 1somelettersandsomenumbersordigitsandth4
-```
-   That should return: `Successfully logged in as <your github username>!`.
-   
-   1.6 Note there are three types of api call licenses: pro, com, org. This is visible in `travis status -h`.
-   
-   1.7 To get your pro token:
-```
-travis token --pro
-Your access token is <somepersonalprotoken>
-```
-   
-   1.8 To get your --org token:
-```
-travis token --org
-Your access token is <somepersonalorgtoken>
-```
-   
-   1.9 To get your --com token:
-```
-travis token --com
-Your access token is <somepersonalcomtoken>
-```
-2. **Export your travis token to terminal before running the tests with:**
-```
-COM_TRAVIS_TOKEN="<your secret travis pro/com token>"
-```
-3. One can get the build history with:
-```
-travis history -r v-bosch/sponsor_example --com --token $COM_TRAVIS_TOKEN
-```
-4. And the build status with:
-```
-travis status -r v-bosch/sponsor_example --com --token $COM_TRAVIS_TOKEN
-```
-5. To get the build status of a particular commit it is best to use [GitHub API](https://docs.github.com/en/rest/reference/repos#get-the-combined-status-for-a-specific-reference) according to [this advice](https://travis-ci.community/t/how-to-get-build-status-of-particular-commit-using-travis-api/11195)
-
 
 ## Test Descriptions
 
 ### Test Travis CI Build status - failed
-*.*Test Filename:** `test_build_status_failed.js`
-**Contract Filename:** `SampleUsingTellor.sol`
+*.*Test Filename:** `test_build_status_fail.js`
+**Contract Filename:** `BuildStatusCheck.sol`
 **Description:** This test verifies that the test/oracle correctly detects that the build in Travis CI has failed. Additionally it verifies that the uint256 that comes from the test/oracle and goes into the contract is correctly identified as a failed build. This is done by hardcoding the uint256 value that corresponds to  "failed build" in the test/oracle into the smart contract and returning value 1 if it passes.
 
- - [ ] **TODO:** The test should get the latest commit to the main branch of the bounty hunter. Next it should get the Travis CI status of that particular commit, not just of the latest build. (See Attack Surfaces - Travis CI point 0.)
 - [ ] **TODO:** Convert the test into an actual oracle that can be deployed.
 - [ ] **TODO:** Currently the test/oracle passes a uint256 to the smart contract, this contains more data than a boolean whereas a boolean is sufficient, therefore, the transaction costs could perhaps be lowered.
 - [ ] **TODO:** Currently the smart contract returns a uint256 that represents whether the contract will pay out or not. This can be converted into a boolean to reduce transaction costs.
-- [ ] **TODO:** Currently the data from the Travis Build status is curled using shell (not bash) commands within NodeJS. We should look up how the oracles are actually implemented and find minimum computational costs for a sufficiently safe protocol/query. In practice, determine which language the Tellor oracles use and write a proper implementation.
+- [ ] **TODO:** Currently the data from the Travis Build status is curled using shell (not bash) commands within NodeJS. We could look up how the oracles are actually implemented and find minimum computational costs for a sufficiently safe protocol/query. In practice, determine which language the Tellor oracles use and write a proper implementation.
 - [ ] **TODO:** Do an actual payout and test the resulting balances instead of checking the return value of 2 and 1.
  - **Hunter github name:** `v-bosch`
  - **Hunter repository:** `sponsor_example`
@@ -117,8 +45,8 @@ travis status -r v-bosch/sponsor_example --com --token $COM_TRAVIS_TOKEN
  - **Hunter repository commit:** `c4c8490017a2b859e973c0be6bab3dbe8bccbc2c`
 
 ### Test Travis CI Build status - passed
-**Test Filename:** `test_build_status_passed.js`
-**Contract Filename:** `SampleUsingTellor.sol`
+**Test Filename:** `test_build_status_pass.js`
+**Contract Filename:** `BuildStatusCheck.sol`
 **Description:** This test verifies that the test/oracle correctly detects that the build in Travis CI has passed. Additionally it verifies that the uint256 that comes from the test/oracle and goes into the contract is correctly identified as a passed build. This is done by hardcoding the uint256 value that corresponds to  "passed build" in the test/oracle into the smart contract and returning value 1 if it passes.
 
 - [ ] **TODO:** See *Test Travis CI Build status - failed* TODO's 0 to 5.
@@ -128,7 +56,7 @@ travis status -r v-bosch/sponsor_example --com --token $COM_TRAVIS_TOKEN
  - **Hunter repository commit:** `b822b1cd82ea169bbc1a7faf3d7855eae6538130`
 
 ### Test If Bounty Hunter Added New (Attack) Files To Sponsor Code Skeleton
-**Test Filename:** `test_modified_file_list.js`
+**Test Filename:** `test_mod_file_list.js`
 **Contract Filename:** `CompareFileListsInRepo.sol`
 **Description:** This test verifies that that an certain attack of bounty hunter is identified corretly by the test/oracles. It catches a bounty hunter attack where the hunter adds an additional file that could potentially hijack the Travis CI to give off a falsified CI Build status. This is done by curling the list of files in the latest commit of the sponsor repository and bounty hunter repository. The curling is done using shell (not bash) scripts in the node.js test/oracle file. Next, the test/oracle files computes the difference between the two file lists using shell (not bash) commands in node.js and converts the difference into a uint256 while adding an offset. This uint256 is passed to the solidity contract, where basically the uint256 of the offset (so with zero difference in file lists) is hardcoded. If the incoming uint256 matches the hardcoded offset uint256 value, the smart contract pays out, otherwise it doesnt. (The payout is simulated by returning a uint256 value 2, no payout is represented by returning a uint256 value of 1.)
 
@@ -137,14 +65,14 @@ travis status -r v-bosch/sponsor_example --com --token $COM_TRAVIS_TOKEN
  - **Hunter github name:** `a-t-0`
  - **Hunter repository:** `sponsor_example`
  - **Hunter repository branch:** `attack_in_new_file`
- - **Hunter repository commit:** `17343f5c45fa331862d7fa7d2d46441e6379cb8c`
+ - **Hunter repository commit:** `00c16a620847faae3a6b7b1dcc5d4d458f2c7986`
  - **Sponsor github name:** `a-t-0`
  - **Sponsor repository:** `sponsor_example`
  - **Sponsor repository branch:** `main`
- - **Sponsor repository commit:** `4e73cfa1564d12abf3a40c6354730cc5d941f9e0`
+ - **Sponsor repository commit:** `556c43c2441356971da6b55176a069e9b9497033`
 
 ### Test Bounty Hunter Did Not Add New (Attack) Files To Sponsor Code Skeleton
-**Test Filename:** `test_modified_file_list.js`
+**Test Filename:** `test_unmod_file_list.js`
 **Contract Filename:** `CompareFileListsInRepo.sol`
 **Description:** This test verifies that the test/oracle sends a "payout" signal if the bounty hunter did not add any files to the code skeleton provided by the bounty hunter
 
@@ -152,54 +80,45 @@ travis status -r v-bosch/sponsor_example --com --token $COM_TRAVIS_TOKEN
  - **Hunter github name:** `a-t-0`
  - **Hunter repository:** `sponsor_example`
  - **Hunter repository branch:** `no_attack_in_new_file`
- - **Hunter repository commit:** `e69effa34be65bcfca33915f2fc931a1294a4e48`
+ - **Hunter repository commit:** `d8e518b97cc1a528f49a01081890931403361561`
  - **Sponsor github name:** `a-t-0`
  - **Sponsor repository:** `sponsor_example`
  - **Sponsor repository branch:** `main`
- - **Sponsor repository commit:** `4e73cfa1564d12abf3a40c6354730cc5d941f9e0`
+ - **Sponsor repository commit:** `556c43c2441356971da6b55176a069e9b9497033`
 
 ### Test If Bounty Hunter Manipulation Of A Test File Is Detected
-**Test Filename:** `test_modified_file_list.js`
-**Contract Filename:** `CompareFileListsInRepo.sol`
+**Test Filename:** `test_file_contents_changed.js`
+**Contract Filename:** `CompareFileContents.sol`
 **Description:** This test verifies that the bounty hunter did not falsify the unittests. This is done by looping through the file list and curling each file locally from both the bounty hunter repository and sponsor repository and then comparing whether the contents of the files are identical. If it is identical, no difference is detected, an offset is added and the difference+offset is encoded to a uint256 which is passed to the solidity contract, which pays out if the hardcoded uint256 representing the encoded offset matches that of the incoming uint256.
 
 - [ ] **TODO:** Allow the sponsor to create a file inside the sponsor repository that specifies which files should remain unmodified. This file should then always be used to check if the sponsor tampered those files.
  - **Hunter github name:** `a-t-0`
  - **Hunter repository:** `sponsor_example`
  - **Hunter repository branch:** `attack_unit_test`
- - **Hunter repository commit:** `ede9a66a551b105f83e73f4274a3f9dbea7df6ff`
+ - **Hunter repository commit:** `2bd88d1551a835b12c31d8a392f2ee0bf0977c65`
  - **Sponsor github name:** `a-t-0`
  - **Sponsor repository:** `sponsor_example`
  - **Sponsor repository branch:** `main`
- - **Sponsor repository commit:** `4e73cfa1564d12abf3a40c6354730cc5d941f9e0`
+ - **Sponsor repository commit:** `556c43c2441356971da6b55176a069e9b9497033`
+ - **Sponsor unmutable file list:** `unmutable_filelist.txt`
 
 ### Test If Unmanipulated Test Files Result In Payout Signal
-**Test Filename:** `test_unmodified_file_list.js`
-**Contract Filename:** `CompareFileListsInRepo.sol`
+**Test Filename:** `test_file_contents_unchanged.js`
+**Contract Filename:** `CompareFileContents.sol`
 **Description:** This test verifies that the test/oracle sends a payout signal if the bounty hunter does not falsify the unit tests. 
 
 0. **TODO:** See *Test If Bounty Hunter Manipulation Of A Test File Is Detected*.
  - **Hunter github name:** `a-t-0`
  - **Hunter repository:** `sponsor_example`
- - **Hunter repository branch:** `no_attack_unit_test`
- - **Hunter repository commit:** `TODO`
+ - **Hunter repository branch:** `no_attack_in_filecontent`
+ - **Hunter repository commit:** `4d78ba9b04d26cfb95296c0cee0a7cc6a3897d44`
  - **Sponsor github name:** `a-t-0`
  - **Sponsor repository:** `sponsor_example`
  - **Sponsor repository branch:** `main`
- - **Sponsor repository commit:** `4e73cfa1564d12abf3a40c6354730cc5d941f9e0`
+ - **Sponsor repository commit:** `556c43c2441356971da6b55176a069e9b9497033`
 
 
 ## TODO In Testing
-### Testing Sponsor Contract
-- [ ] Write description 
-- [ ] Create an example sponsor repository that fails the travis CI. (Should result in no payout)
-- [ ] Create a bounty hunter fork that passes the tests with a valid solution. (Should result in payout)
-- [ ] Create a bounty hunter fork that passes the tests by hacking the unit tests (assert true==true). (Should result in no payout)
-- [ ] Create a bounty hunter fork that passes the tests with a valid solution that contains an extra file. (Should result in no payout)
-- [ ] Create a bounty hunter fork that passes the tests with a valid solution that contains a file that has a size>1mb. (Should result in no payout)
-- [ ] Create a bounty hunter fork that passes the tests with a valid solution that contains more than 1000 files. (Should result in no payout)
-- [ ] Conglomerate all unit tests into a single oracle.
-
 ### Actual Tellor Integration
 - [ ] Merge the tests of the oracles into a single oracle test script.
 - [ ] Ask how the actual oracles do their computations and convert the test scripts into that language/construction
