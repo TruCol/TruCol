@@ -28,6 +28,7 @@ npm test
 ```
 
 ## Test Descriptions
+Below are the instructions for the 6 tests that check if the bounty hunter did not cheat. The TODO's are proposed to be evaluated after feedback by Tellor.
 
 ### Test Travis CI Build status - failed
 *.*Test Filename:** `test_build_status_fail.js`
@@ -118,8 +119,8 @@ npm test
  - **Sponsor repository commit:** `556c43c2441356971da6b55176a069e9b9497033`
 
 
-## TODO In Testing
-### Actual Tellor Integration
+## Future development
+A brief recap of the TODOs that are to be completed before the Tellor oracle system can be used live by the TruCol protocol:
 - [ ] Merge the tests of the oracles into a single oracle test script.
 - [ ] Ask how the actual oracles do their computations and convert the test scripts into that language/construction
 - [ ] Ask for a custom Tellor ID that allows passing the branch and/or commit (or reading it from the contract).
