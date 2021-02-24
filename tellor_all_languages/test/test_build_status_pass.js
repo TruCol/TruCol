@@ -95,11 +95,6 @@ contract("UsingTellor Tests", function (accounts) {
 	
 	
 	// -----------------------------------------Get The Tellor Oracles Data With Shell --------------------------
-	// Specify travis api command that gets the build status and stores its result in an output file.
-	// travis history -r v-bosch/sponsor_example --com --token $COM_TRAVIS_TOKEN
-	// TODO: export your travis token in terminal before running this with:COM_TRAVIS_TOKEN="YOURPERSONALTRAVISCODE"
-	// TODO: get that code from command:`travis token --pro` or with `--org` or `--com` options.
-	//var get_build_status_command ="travis status -r "+github_username+"/"+github_repository_name+" --com --token $COM_TRAVIS_TOKEN > "+output_filename
 	var get_build_status_command = "GET https://api.github.com/repos/"+github_username+"/"+github_repository_name+"/commits/"+github_commit+"/check-runs > "+output_filename
 
 	console.log("The shell command that gets the build successfull status is:")

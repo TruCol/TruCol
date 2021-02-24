@@ -78,10 +78,6 @@ contract("UsingTellor Tests", function (accounts) {
 	// specify the repository commits of the sponsor and bounty hunter
 	const github_username_hunter = "a-t-0"	
 	const repo_name_hunter = "sponsor_example"
-	// TODO: copy to test_file_contents_changed.js once the remainder TODO's are processed
-	// TODO: include immutable file list in attack repo
-	//const branch_hunter = "attack_unit_test"
-	//const commit_hunter = "ede9a66a551b105f83e73f4274a3f9dbea7df6ff"
 	const branch_hunter = "no_attack_in_filecontent"
 	const commit_hunter = "4d78ba9b04d26cfb95296c0cee0a7cc6a3897d44"
 	

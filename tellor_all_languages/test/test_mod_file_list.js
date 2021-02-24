@@ -78,7 +78,7 @@ contract("UsingTellor Tests", function (accounts) {
 
 	// -----------------------------------------Specify Tellor Oracles Data Sources ----------------------------
 	// specify the repository commits of the sponsor and bounty hunter
-	const github_username_hunter = "a-t-0"	
+	const github_username_hunter = "a-t-0"
 	const repo_name_hunter = "sponsor_example"
 	const branch_hunter = "attack_in_new_file"
 	const commit_hunter = "00c16a620847faae3a6b7b1dcc5d4d458f2c7986"
