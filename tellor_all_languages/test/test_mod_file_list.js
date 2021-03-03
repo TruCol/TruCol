@@ -97,7 +97,9 @@ contract("UsingTellor Tests", function (accounts) {
     // (Re-)create temporary test output folder for curled data
     helper.createDirIfNotExists(testOutputFolder);
     helper.createDirIfNotExists(testOutputFolder + "/" + testType);
-    helper.createDirIfNotExists(testOutputFolder + "/" + testType + "/" + testCase);
+    helper.createDirIfNotExists(
+      testOutputFolder + "/" + testType + "/" + testCase
+    );
 
     // -----------------------------------------Specify Curl Commands That Get API Data---------------------------
     // create comand to get file list of hunter repo commit

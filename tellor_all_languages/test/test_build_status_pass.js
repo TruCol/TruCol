@@ -70,7 +70,9 @@ contract("UsingTellor Tests", function (accounts) {
     // (Re-)create temporary test output folder for curled data
     helper.createDirIfNotExists(testOutputFolder);
     helper.createDirIfNotExists(testOutputFolder + "/" + testType);
-    helper.createDirIfNotExists(testOutputFolder + "/" + testType + "/" + testCase);
+    helper.createDirIfNotExists(
+      testOutputFolder + "/" + testType + "/" + testCase
+    );
 
     // -----------------------------------------Get The Tellor Oracles Data With Shell --------------------------
     var getBuildStatusCommand =
