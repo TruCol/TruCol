@@ -1,3 +1,5 @@
+// This contract simulates paying out if a Tellor oracle says:
+// "the github build of the hunter repository passed", by returning an integer.
 pragma solidity >=0.5.16;
 import "usingtellor/contracts/UsingTellor.sol";
 import "usingtellor/contracts/TellorPlayground.sol";

@@ -1,3 +1,5 @@
+// Example contract as provided by Tellor that returns an integer based 
+// on input of an oracle.
 pragma solidity >=0.5.16;
 import "usingtellor/contracts/UsingTellor.sol";
 import "usingtellor/contracts/TellorPlayground.sol";

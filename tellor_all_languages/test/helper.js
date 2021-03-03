@@ -11,7 +11,7 @@ module.exports = {
     return number;
   },
 
-  createOutputDir: function (dir) {
+  createDirIfNotExists: function (dir) {
     var fs = require("fs");
 
     if (!fs.existsSync(dir)) {

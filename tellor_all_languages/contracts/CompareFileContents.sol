@@ -1,3 +1,6 @@
+// This contract simulates paying out if a Tellor oracle says:
+// "the github branch of the hunter repository did not tamper with 
+// unmutable files", by returning an integer.
 pragma solidity >=0.5.16;
 import "usingtellor/contracts/UsingTellor.sol";
 import "usingtellor/contracts/TellorPlayground.sol";
