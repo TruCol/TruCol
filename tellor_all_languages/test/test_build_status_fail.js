@@ -2,8 +2,9 @@ const BuildStatusCheck = artifacts.require("./BuildStatusCheck.sol");
 const exec = require('child_process').exec;
 const Tellor = artifacts.require("TellorPlayground.sol");
 var fs = require('fs');
-var rimraf = require("rimraf"); //npm install rimraf
 var helper = require('./helper');
+var rimraf = require("rimraf"); //npm install rimraf
+
 	
 //Helper function that submits and value and returns a timestamp for easy retrieval
 const submitTellorValue = async (tellorOracle, requestId, amount) => {
