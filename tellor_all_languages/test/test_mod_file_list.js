@@ -4,6 +4,7 @@ const CompareFileListsInRepo = artifacts.require(
 const exec = require("child_process").exec;
 const Tellor = artifacts.require("TellorPlayground.sol");
 var fs = require("fs");
+var helper = require("/.helper");
 var rimraf = require("rimraf"); //npm install rimraf
 var urllib = require("urllib");
 

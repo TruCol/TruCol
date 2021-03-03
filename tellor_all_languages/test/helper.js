@@ -16,4 +16,11 @@ module.exports = {
       fs.mkdirSync(dir);
     }
   },
+
+  // getting some file
+  doCall: function (urlToCall, callback) {
+    urllib.request(urlToCall, { wd: "nodejs" }, function (err, data, response) {
+      return callback(data);
+    });
+  },
 };

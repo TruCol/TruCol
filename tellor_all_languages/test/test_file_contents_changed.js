@@ -2,6 +2,7 @@ const CompareFileContents = artifacts.require("./CompareFileContents.sol");
 const exec = require("child_process").exec;
 const Tellor = artifacts.require("TellorPlayground.sol");
 var fs = require("fs");
+var helper = require("./helper");
 var rimraf = require("rimraf");
 var urllib = require("urllib");
 
@@ -33,16 +34,6 @@ contract("UsingTellor Tests", function (accounts) {
     // in that case the repository name and commit of the bounty hunter should be passed).
 
     // -----------------------------------------Helper Functions ----------------------------
-    // Encode a string to a number
-    // Source: https://stackoverflow.com/questions/14346829/is-there-a-way-to-convert-a-string-to-a-base-10-number-for-encryption
-    function encode(string) {
-      var number = "0x";
-      var length = string.length;
-      for (var i = 0; i < length; i++)
-        number += string.charCodeAt(i).toString(16);
-      return number;
-    }
-
     // Function that runs some incoming shell command (not bash)
     function os_func() {
       this.execCommand = function (cmd) {
@@ -58,25 +49,6 @@ contract("UsingTellor Tests", function (accounts) {
       };
     }
     var os = new os_func();
-
-    // getting some file
-    function doCall(urlToCall, callback) {
-      urllib.request(
-        urlToCall,
-        { wd: "nodejs" },
-        function (err, data, response) {
-          return callback(data);
-        }
-      );
-    }
-
-    function create_output_dir(dir) {
-      var fs = require("fs");
-
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir);
-      }
-    }
 
     // -----------------------------------------Specify Tellor Oracles Data Sources ----------------------------
     // specify the repository commits of the sponsor and bounty hunter
@@ -113,9 +85,11 @@ contract("UsingTellor Tests", function (accounts) {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // (Re-)create temporary test output folder for curled data
-    create_output_dir(test_output_folder);
-    create_output_dir(test_output_folder + "/" + test_type);
-    create_output_dir(test_output_folder + "/" + test_type + "/" + test_case);
+    helper.create_output_dir(test_output_folder);
+    helper.create_output_dir(test_output_folder + "/" + test_type);
+    helper.create_output_dir(
+      test_output_folder + "/" + test_type + "/" + test_case
+    );
 
     // specify the output directory and filename of the file that contains the differences
     var differences_filename =
@@ -273,7 +247,7 @@ contract("UsingTellor Tests", function (accounts) {
     console.log("");
 
     // encode build checkflag
-    const encoded_difference_in_file_lists = encode(
+    const encoded_difference_in_file_lists = helper.encode(
       string_difference_in_file_lists + "offset"
     );
     console.log(
