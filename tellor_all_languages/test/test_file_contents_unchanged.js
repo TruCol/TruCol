@@ -1,7 +1,9 @@
-var urllib = require('urllib');
-
 const CompareFileContents = artifacts.require("./CompareFileContents.sol");
+const exec = require('child_process').exec;
 const Tellor = artifacts.require("TellorPlayground.sol");
+var fs = require('fs');
+var rimraf = require("rimraf"); //npm install rimraf
+var urllib = require('urllib');
 
 //Helper function that submits and value and returns a timestamp for easy retrieval
 const submitTellorValue = async (tellorOracle, requestId, amount) => {
@@ -43,7 +45,6 @@ contract("UsingTellor Tests", function (accounts) {
 	}    	
     	
     // Function that runs some incoming shell command (not bash)
-	const exec = require('child_process').exec;
 	function os_func() {
 		this.execCommand = function (cmd) {
 		    return new Promise((resolve, reject)=> {
@@ -100,7 +101,6 @@ contract("UsingTellor Tests", function (accounts) {
 	var test_case = "unchanged"
 	
 	// Empty test output folder before using it
-	var rimraf = require("rimraf"); //npm install rimraf
 	rimraf(test_output_folder, function () { console.log("Removed the old content of the temporary output directory.\n"); });
 	
 	// TODO: do not hardcode the folder deletion time
@@ -169,7 +169,6 @@ contract("UsingTellor Tests", function (accounts) {
 	await new Promise(resolve => setTimeout(resolve, 10000));
 	
 	// read out the pass/fail status of the repository build from file
-	var fs = require('fs');
 	var difference_in_file_lists = fs.readFileSync(differences_filename);
 	var string_difference_in_file_lists = difference_in_file_lists.toString();
 	console.log("The list of different files in unmutable files should be void/empty, it is:")

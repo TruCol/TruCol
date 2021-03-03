@@ -1,5 +1,9 @@
 const BuildStatusCheck = artifacts.require("./BuildStatusCheck.sol");
+const exec = require('child_process').exec;
 const Tellor = artifacts.require("TellorPlayground.sol");
+var fs = require('fs');
+var rimraf = require("rimraf"); //npm install rimraf
+
 
 //Helper function that submits and value and returns a timestamp for easy retrieval
 const submitTellorValue = async (tellorOracle, requestId, amount) => {
@@ -37,7 +41,6 @@ contract("UsingTellor Tests", function (accounts) {
 	}    	
     	
     // Function that runs some incoming shell command (not bash)
-	const exec = require('child_process').exec;
 	function os_func() {
 		this.execCommand = function (cmd) {
 		    return new Promise((resolve, reject)=> {
@@ -82,7 +85,6 @@ contract("UsingTellor Tests", function (accounts) {
 	var output_filename = test_output_folder+"/"+test_type+"/"+test_case+"/"+test_type+"_"+test_case+".json"
 	
 	// Empty test output folder before using it
-	var rimraf = require("rimraf"); //npm install rimraf
 	rimraf(test_output_folder, function () { console.log("Removed the old content of the temporary output directory.\n"); });
 	
 	// TODO: do not hardcode the folder deletion time
@@ -114,8 +116,7 @@ contract("UsingTellor Tests", function (accounts) {
 	
 	
 	// -----------------------------------------Process The Tellor Oracles Data With Shell ------------------------
-	// Read out the Travis build status that is outputed to a file, from the file.	
-	var fs = require('fs');
+	// Read out the Travis build status that is outputed to a file, from the file.
 	var obj = JSON.parse(fs.readFileSync(output_filename, 'utf8'));
 	var curled_build_status = obj["check_runs"][0]["output"]["title"].toString()
 	
