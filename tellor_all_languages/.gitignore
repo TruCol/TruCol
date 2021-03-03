@@ -5,3 +5,6 @@
 .env
 
 **.DS_Store
+
+# ignore temporary output files
+curled_test_data/*

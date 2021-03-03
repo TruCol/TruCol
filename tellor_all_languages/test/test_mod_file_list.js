@@ -39,7 +39,7 @@ contract("UsingTellor Tests", function (accounts) {
 
     // -----------------------------------------Helper Functions ----------------------------
     // Function that runs some incoming shell command (not bash)
-    function os_func() {
+    function osFunc() {
       this.execCommand = function (cmd) {
         return new Promise((resolve, reject) => {
           exec(cmd, (error, stdout, stderr) => {
@@ -52,55 +52,55 @@ contract("UsingTellor Tests", function (accounts) {
         });
       };
     }
-    var os = new os_func();
+    var os = new osFunc();
 
     // -----------------------------------------Specify Tellor Oracles Data Sources ----------------------------
     // specify the repository commits of the sponsor and bounty hunter
-    const github_username_hunter = "a-t-0";
-    const repo_name_hunter = "sponsor_example";
-    const branch_hunter = "attack_in_new_file";
-    const commit_hunter = "00c16a620847faae3a6b7b1dcc5d4d458f2c7986";
+    const githubUsernameHunter = "a-t-0";
+    const repoNameHunter = "sponsor_example";
+    const branchHunter = "attack_in_new_file";
+    const commitHunter = "00c16a620847faae3a6b7b1dcc5d4d458f2c7986";
 
-    const github_username_sponsor = "a-t-0";
-    const repo_name_sponsor = "sponsor_example";
-    const branch_sponsor = "main";
-    const commit_sponsor = "556c43c2441356971da6b55176a069e9b9497033";
+    const githubUsernameSponsor = "a-t-0";
+    const repoNameSponsor = "sponsor_example";
+    const branchSponsor = "main";
+    const commitSponsor = "556c43c2441356971da6b55176a069e9b9497033";
 
     // -----------------------------------------Specify Temporary input and output (files)------------------------
     // Show the contract contains the logic to identify a correct build fail/pass.
     // If the bounty hunter did not add an additional (attack) file, a uint256 of value 2 is expected
     // from the contract. Otherwise a uint of value 1 is expected.
-    const expected_sponsor_contract_output = 2;
+    const expectedSponsorContractOutput = 2;
 
     // Specify local output location of curled data
-    var test_output_folder = "curled_test_data";
-    var test_type = "file_list";
-    var test_case = "changed";
-    var output_filepath_hunter =
-      test_output_folder +
+    var testOutputFolder = "curled_test_data";
+    var testType = "file_list";
+    var testCase = "changed";
+    var outputFilepathHunter =
+      testOutputFolder +
       "/" +
-      test_type +
+      testType +
       "/" +
-      test_case +
+      testCase +
       "/" +
-      test_type +
+      testType +
       "_" +
-      test_case +
+      testCase +
       "_hunter.json";
-    var output_filepath_sponsor =
-      test_output_folder +
+    var outputFilepathSponsor =
+      testOutputFolder +
       "/" +
-      test_type +
+      testType +
       "/" +
-      test_case +
+      testCase +
       "/" +
-      test_type +
+      testType +
       "_" +
-      test_case +
+      testCase +
       "_sponsor.json";
 
     // Empty test output folder before using it
-    rimraf(test_output_folder, function () {
+    rimraf(testOutputFolder, function () {
       console.log(
         "Removed the old content of the temporary output directory.\n"
       );
@@ -110,48 +110,46 @@ contract("UsingTellor Tests", function (accounts) {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // (Re-)create temporary test output folder for curled data
-    helper.create_output_dir(test_output_folder);
-    helper.create_output_dir(test_output_folder + "/" + test_type);
-    helper.create_output_dir(
-      test_output_folder + "/" + test_type + "/" + test_case
-    );
+    helper.createOutputDir(testOutputFolder);
+    helper.createOutputDir(testOutputFolder + "/" + testType);
+    helper.createOutputDir(testOutputFolder + "/" + testType + "/" + testCase);
 
     // -----------------------------------------Specify Curl Commands That Get API Data---------------------------
     // create comand to get file list of hunter repo commit
-    var command_to_get_hunter_filelist =
+    var commandToGetHunterFilelist =
       "GET https://api.github.com/repos/" +
-      github_username_hunter +
+      githubUsernameHunter +
       "/" +
-      repo_name_hunter +
+      repoNameHunter +
       "/git/trees/" +
-      commit_hunter +
+      commitHunter +
       "?recursive=1 > " +
-      output_filepath_hunter;
+      outputFilepathHunter;
 
     // print command to terminal
     console.log("The shell command that gets the hunter file list is:");
-    console.log(command_to_get_hunter_filelist);
+    console.log(commandToGetHunterFilelist);
     console.log("");
 
     // create comand to get file list of sponsor repo commit
-    var command_to_get_sponsor_filelist =
+    var commandToGetSponsorFilelist =
       "GET https://api.github.com/repos/" +
-      github_username_sponsor +
+      githubUsernameSponsor +
       "/" +
-      repo_name_sponsor +
+      repoNameSponsor +
       "/git/trees/" +
-      commit_sponsor +
+      commitSponsor +
       "?recursive=1 > " +
-      output_filepath_sponsor;
+      outputFilepathSponsor;
 
     // print command to terminal
     console.log("The shell command that gets the sponsor file list is:");
-    console.log(command_to_get_sponsor_filelist);
+    console.log(commandToGetSponsorFilelist);
     console.log("");
 
     // -----------------------------------------Get The Tellor Oracles Data With Shell --------------------------
     // get file list from hunter repo
-    os.execCommand(command_to_get_hunter_filelist)
+    os.execCommand(commandToGetHunterFilelist)
       .then((res) => {
         console.log(
           "Getting filelist from the hunter repository, please wait 10 seconds.",
@@ -166,7 +164,7 @@ contract("UsingTellor Tests", function (accounts) {
       });
 
     // get file list from sponsor repo
-    os.execCommand(command_to_get_sponsor_filelist)
+    os.execCommand(commandToGetSponsorFilelist)
       .then((res) => {
         console.log(
           "Getting filelist from the sponsor repository, please wait 10 seconds.",
@@ -181,59 +179,59 @@ contract("UsingTellor Tests", function (accounts) {
       });
 
     // wait till file is read (it takes a while)
-    // TODO: do not hardcode the build time, but make it dependend on completion of the os_func function.
+    // TODO: do not hardcode the build time, but make it dependend on completion of the osFunc function.
     await new Promise((resolve) => setTimeout(resolve, 10000));
 
     // -----------------------------------------Process The Tellor Oracles Data -------------------------------------
     // Computing differences in node js
     // Read out the Travis build status that is outputed to a file, from the file.
-    var hunter_filelist = JSON.parse(
-      fs.readFileSync(output_filepath_hunter, "utf8")
+    var hunterFilelist = JSON.parse(
+      fs.readFileSync(outputFilepathHunter, "utf8")
     );
-    var sponsor_filelist = JSON.parse(
-      fs.readFileSync(output_filepath_sponsor, "utf8")
+    var sponsorFilelist = JSON.parse(
+      fs.readFileSync(outputFilepathSponsor, "utf8")
     );
 
-    var hunter_filepaths = [];
-    for (let val of hunter_filelist["tree"]) {
-      hunter_filepaths.push(val["path"]);
+    var hunterFilepaths = [];
+    for (let val of hunterFilelist["tree"]) {
+      hunterFilepaths.push(val["path"]);
     }
-    var sponsor_filepaths = [];
-    for (let val of sponsor_filelist["tree"]) {
-      sponsor_filepaths.push(val["path"]);
+    var sponsorFilepaths = [];
+    for (let val of sponsorFilelist["tree"]) {
+      sponsorFilepaths.push(val["path"]);
     }
 
     // Source: https://stackoverflow.com/questions/13523611/how-to-compare-two-arrays-in-node-js
     // Note: ignored Nan edge case cause file names should not be Nan values
     if (
-      hunter_filepaths.length == sponsor_filepaths.length &&
-      hunter_filepaths.every(function (u, i) {
-        return u === sponsor_filepaths[i];
+      hunterFilepaths.length == sponsorFilepaths.length &&
+      hunterFilepaths.every(function (u, i) {
+        return u === sponsorFilepaths[i];
       })
     ) {
-      var file_lists_differ = false;
+      var filelistsDiffer = false;
     } else {
-      var file_lists_differ = true;
+      var filelistsDiffer = true;
     }
-    console.log("file_lists_differ is:");
-    console.log(file_lists_differ);
+    console.log("filelistsDiffer is:");
+    console.log(filelistsDiffer);
 
     // encode build checkflag
-    const encoded_difference_in_file_lists = helper.encode(
-      file_lists_differ + "offset"
+    const encodedDifferenceInFilelist = helper.encode(
+      filelistsDiffer + "offset"
     );
     console.log(
       "The numerically encoded list of different files between sponsor repo and bounty hunter repo is (including an offset):"
     );
-    console.log(encoded_difference_in_file_lists);
+    console.log(encodedDifferenceInFilelist);
     console.log("");
 
     // -----------------------------------------Verify the contract returns the correct retrieved value ----------------------------
     // specify the mock value that is fed by the Tellor oracles into the contract:
-    const mockValue = encoded_difference_in_file_lists;
+    const mockValue = encodedDifferenceInFilelist;
 
     await tellorOracle.submitValue(requestId, mockValue);
     let retrievedVal = await compareFileListsInRepo.readTellorValue(requestId);
-    assert.equal(retrievedVal.toString(), expected_sponsor_contract_output);
+    assert.equal(retrievedVal.toString(), expectedSponsorContractOutput);
   });
 });

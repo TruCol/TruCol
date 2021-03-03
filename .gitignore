@@ -373,6 +373,3 @@ testeth
 node_modules
 bin_output
 logs
-
-# Tellor
-tellor_all_languages/curled_test_data/*

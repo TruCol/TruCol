@@ -9,7 +9,7 @@ module.exports = {
     return number;
   },
 
-  create_output_dir: function (dir) {
+  createOutputDir: function (dir) {
     var fs = require("fs");
 
     if (!fs.existsSync(dir)) {
