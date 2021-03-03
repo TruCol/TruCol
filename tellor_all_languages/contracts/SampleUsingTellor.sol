@@ -30,13 +30,6 @@ contract SampleUsingTellor is UsingTellor {
 		if (value == build_failed)
 			return 1;
         return value; // error thrown during build status query
-		
-		// move this into a second contract, or copy this read tellor function for a second query
-		// then pass the output to a function or other contract that is going to pay out
-		// if (value_unit tests == untampered_encoded_unit_test_file_content_number)
-			//return 2;
-		// if (value_unit tests == tampered_encoded_unit_test_file_content_number)
-			//return 2;
     }
 
     function readTellorValueBefore(uint256 _tellorId, uint256 _timestamp)
