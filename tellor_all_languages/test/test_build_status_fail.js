@@ -27,22 +27,6 @@ contract("UsingTellor Tests", function (accounts) {
     // Specify which data (type) is requested from the oracle. (Should become something like 59, a new entry for TruCol)
     const requestId = 1;
 
-    // Function that runs some incoming shell command (not bash)
-    function osFunc() {
-      this.execCommand = function (cmd) {
-        return new Promise((resolve, reject) => {
-          exec(cmd, (error, stdout, stderr) => {
-            if (error) {
-              reject(error);
-              return;
-            }
-            resolve(stdout);
-          });
-        });
-      };
-    }
-    var os = new osFunc();
-
     // -----------------------------------------Specify Tellor Oracles Data Sources ----------------------------
     // Read whether a travis build has failed or passed
     const githubUsernameHunter = "v-bosch";
@@ -103,7 +87,8 @@ contract("UsingTellor Tests", function (accounts) {
     console.log("");
 
     // Run the shell command that stores the Travis build status into a file
-    os.execCommand(getBuildStatusCommand)
+    helper
+      .execCommand(getBuildStatusCommand)
       .then((res) => {
         console.log(
           "Exporting output of travis api call to output file, please wait 10 seconds.",
@@ -112,13 +97,13 @@ contract("UsingTellor Tests", function (accounts) {
       })
       .catch((err) => {
         console.log(
-          "Exporting output of travis api call to output file, please wait 10 seconds.",
+          "An error occured whilst exporting output of travis api call to output file:",
           err
         );
       });
 
     // Manually wait a bit unitll the Travis build status is stored into file before proceding.
-    // TODO: do not hardcode the build time, but make it dependend on completion of the osFunc function.
+    // TODO: do not hardcode the build time, but make it dependend on completion of the execCommand function.
     await new Promise((resolve) => setTimeout(resolve, 10000));
 
     // -----------------------------------------Process The Tellor Oracles Data With Shell ------------------------

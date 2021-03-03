@@ -37,23 +37,6 @@ contract("UsingTellor Tests", function (accounts) {
     // (unless the Tellor oracles cannot find what the bounty hunter contract was that initated this Tellor query,
     // in that case the repository name and commit of the bounty hunter should be passed).
 
-    // -----------------------------------------Helper Functions ----------------------------
-    // Function that runs some incoming shell command (not bash)
-    function osFunc() {
-      this.execCommand = function (cmd) {
-        return new Promise((resolve, reject) => {
-          exec(cmd, (error, stdout, stderr) => {
-            if (error) {
-              reject(error);
-              return;
-            }
-            resolve(stdout);
-          });
-        });
-      };
-    }
-    var os = new osFunc();
-
     // -----------------------------------------Specify Tellor Oracles Data Sources ----------------------------
     // specify the repository commits of the sponsor and bounty hunter
     const githubUsernameHunter = "a-t-0";
@@ -149,7 +132,8 @@ contract("UsingTellor Tests", function (accounts) {
 
     // -----------------------------------------Get The Tellor Oracles Data With Shell --------------------------
     // get file list from hunter repo
-    os.execCommand(commandToGetHunterFilelist)
+    helper
+      .execCommand(commandToGetHunterFilelist)
       .then((res) => {
         console.log(
           "Getting filelist from the hunter repository, please wait 10 seconds.",
@@ -164,7 +148,8 @@ contract("UsingTellor Tests", function (accounts) {
       });
 
     // get file list from sponsor repo
-    os.execCommand(commandToGetSponsorFilelist)
+    helper
+      .execCommand(commandToGetSponsorFilelist)
       .then((res) => {
         console.log(
           "Getting filelist from the sponsor repository, please wait 10 seconds.",
@@ -173,13 +158,13 @@ contract("UsingTellor Tests", function (accounts) {
       })
       .catch((err) => {
         console.log(
-          "Getting filelist from the sponsor repository, please wait 10 seconds.",
+          "An error occured whilst getting filelist from the sponsor repository:",
           err
         );
       });
 
     // wait till file is read (it takes a while)
-    // TODO: do not hardcode the build time, but make it dependend on completion of the osFunc function.
+    // TODO: do not hardcode the build time, but make it dependend on completion of the execCommand function.
     await new Promise((resolve) => setTimeout(resolve, 10000));
 
     // -----------------------------------------Process The Tellor Oracles Data -------------------------------------
