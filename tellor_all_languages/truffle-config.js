@@ -2,7 +2,6 @@ require("dotenv").config();
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 
 const mnemonic = process.env.ETH_MNEMONIC;
-//console.log("mnemonic1", mnemonic1)
 const accessToken = process.env.WEB3_INFURA_PROJECT_ID;
 
 module.exports = {
