@@ -56,14 +56,16 @@ contract("UsingTellor Tests", function (accounts) {
       ".json";
 
     // Empty test output folder before using it
-    rimraf(testOutputFolder, function () {
-      console.log(
-        "Removed the old content of the temporary output directory.\n"
-      );
-    });
+    async function deleteFolder(folder) {
+      return new Promise((resolve, reject) => {
+        rimraf(folder, () => resolve());
+      });
+    }
+    deleteFolder(testOutputFolder);
 
-    // TODO: do not hardcode the folder deletion time
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // Manually wait a bit before re-creating folders
+    // TODO: find out why this wait is still required for (build _status_pass)
+    await new Promise((resolve) => setTimeout(resolve, 10000));
 
     // (Re-)create temporary test output folder for curled data
     helper.createOutputDir(testOutputFolder);
