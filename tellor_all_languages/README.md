@@ -46,10 +46,9 @@ Below are the instructions for the 6 tests that check if the bounty hunter did n
 **Description:\*\* This test verifies that the test/oracle correctly detects that the build in Travis CI has failed. Additionally it verifies that the uint256 that comes from the test/oracle and goes into the contract is correctly identified as a failed build. This is done by hardcoding the uint256 value that corresponds to "failed build" in the test/oracle into the smart contract and returning value 1 if it passes.
 
 - [ ] **TODO:** Convert the test into an actual oracle that can be deployed.
-- [ ] **TODO:** Currently the test/oracle passes a uint256 to the smart contract, this contains more data than a boolean whereas a boolean is sufficient, therefore, the transaction costs could perhaps be lowered.
-- [ ] **TODO:** Currently the smart contract returns a uint256 that represents whether the contract will pay out or not. This can be converted into a boolean to reduce transaction costs.
+- [ ] **TODO:** Currently the test/oracle passes a uint256 to the smart contract, whereas a boolean is sufficient, therefore, the transaction costs could perhaps be lowered by letting the oracle emit a boolean instead of uint256.
+- [ ] **TODO:** Currently the smart contract returns a uint256 that represents whether the contract will pay out or not. This should be changed into doing an actual transaction and testing if the bounty was transferred correctly.
 - [ ] **TODO:** Currently the data from the Travis Build status is curled using shell (not bash) commands within NodeJS. We could look up how the oracles are actually implemented and find minimum computational costs for a sufficiently safe protocol/query. In practice, determine which language the Tellor oracles use and write a proper implementation.
-- [ ] **TODO:** Do an actual payout and test the resulting balances instead of checking the return value of 2 and 1.
 - **Hunter github name:** `v-bosch`
 - **Hunter repository:** `sponsor_example`
 - **Hunter repository branch:** `failing_build`
@@ -73,7 +72,6 @@ Below are the instructions for the 6 tests that check if the bounty hunter did n
 **Contract Filename:** `CompareFileListsInRepo.sol`
 **Description:** This test verifies that that an certain attack of bounty hunter is identified corretly by the test/oracles. It catches a bounty hunter attack where the hunter adds an additional file that could potentially hijack the Travis CI to give off a falsified CI Build status. This is done by curling the list of files in the latest commit of the sponsor repository and bounty hunter repository. The curling is done using shell (not bash) scripts in the node.js test/oracle file. Next, the test/oracle files computes the difference between the two file lists using shell (not bash) commands in node.js and converts the difference into a uint256 while adding an offset. This uint256 is passed to the solidity contract, where basically the uint256 of the offset (so with zero difference in file lists) is hardcoded. If the incoming uint256 matches the hardcoded offset uint256 value, the smart contract pays out, otherwise it doesnt. (The payout is simulated by returning a uint256 value 2, no payout is represented by returning a uint256 value of 1.)
 
-- [ ] **TODO:** Determine how the actual oracles most computationally efficiently and sufficiently safely can retrieve the file list.
 - [ ] **TODO:** Do an actual payout and test the resulting balances instead of checking the return value of 2 and 1.
 - **Hunter github name:** `a-t-0`
 - **Hunter repository:** `sponsor_example`
@@ -90,7 +88,7 @@ Below are the instructions for the 6 tests that check if the bounty hunter did n
 **Contract Filename:** `CompareFileListsInRepo.sol`
 **Description:** This test verifies that the test/oracle sends a "payout" signal if the bounty hunter did not add any files to the code skeleton provided by the bounty hunter
 
-- [ ] **TODO:** See _Test If Bounty Hunter Added New (Attack) Files To Sponsor Code Skeleton_ TODO's 0 to 1.
+- [ ] **TODO:** See _Test If Bounty Hunter Added New (Attack) Files To Sponsor Code Skeleton_ TODO's 0.
 - **Hunter github name:** `a-t-0`
 - **Hunter repository:** `sponsor_example`
 - **Hunter repository branch:** `no_attack_in_new_file`
@@ -106,7 +104,6 @@ Below are the instructions for the 6 tests that check if the bounty hunter did n
 **Contract Filename:** `CompareFileContents.sol`
 **Description:** This test verifies that the bounty hunter did not falsify the unittests. This is done by looping through the file list and curling each file locally from both the bounty hunter repository and sponsor repository and then comparing whether the contents of the files are identical. If it is identical, no difference is detected, an offset is added and the difference+offset is encoded to a uint256 which is passed to the solidity contract, which pays out if the hardcoded uint256 representing the encoded offset matches that of the incoming uint256.
 
-- [ ] **TODO:** Allow the sponsor to create a file inside the sponsor repository that specifies which files should remain unmodified. This file should then always be used to check if the sponsor tampered those files.
 - **Hunter github name:** `a-t-0`
 - **Hunter repository:** `sponsor_example`
 - **Hunter repository branch:** `attack_unit_test`
@@ -139,7 +136,7 @@ Below are the instructions for the 6 tests that check if the bounty hunter did n
 A brief recap of the TODOs that are to be completed before the Tellor oracle system can be used live by the TruCol protocol:
 
 - [ ] Merge the tests of the oracles into a single oracle test script.
-- [ ] Ask how the actual oracles do their computations and convert the test scripts into that language/construction
+- [ ] Ask if/how the provided NodeJS implementation of doing the github queries can be optimised for safety and computational cost minimisation for the actual Tellor oracles.
 - [ ] Ask for a custom Tellor ID that allows passing the branch and/or commit (or reading it from the contract).
 
 ## Attack Surfaces
@@ -148,11 +145,11 @@ This describes the known possible attacks in the Tellor oracle system, Github AP
 
 ### Tellor Oracles
 
-0. Currently the simulated Tellor oracles still do a live check of the sponsor repo and then re-compute the 3 tested properties: travis build status, file list, and checksum of the specified files. However these three properties should instead be computed in advance before publishing the sponsor contract, then combined into a single hash that is hardcoded in the solidity contract. Otherwise, the sponsor could break either of the three properties as soon as the bounty hunter publishes a/the solution to ensure the Tellor oracles detect a difference between the sponsor repo and bounty hunter repo to sabotage a payout. An advantage of hardcoding this data in the smartcontract is that verification becomes cheaper for the oracles since they only have to read out the bounty hunter repo. This is because the sponsor can compute the hashcode/checksum of the three properties itself. If it puts in an invalid hashcode, bounty hunters can see this and simply will not waste effort on the task that will not pay out.
+0. If the bounty is lower than the cost of attacking the Tellor oracle network the bounty hunter could attack the Tellor oracle network to get the bounty. That is why it is recommended by Tellor to always display the cost of attacking the Tellor oracle network.
 
 ### Travis API
 
-0. There might be a delay between the code in the repo and the check-flag on Travis. To prevent the bounty hunter from first pushing an invalid solution that passes the CI, waiting till Travis shows a succesfull passflag and then quickly committing the sponsor repo code skeleton (without solution) to the bounty hunter repo, all api calls to both Travis and GitHub should be done based on an explicit commit.
+0. Travis-CI could be hacked to yield false positives.
 
 ### Github API
 
@@ -163,7 +160,3 @@ This describes the known possible attacks in the Tellor oracle system, Github AP
    _The GitHub API supports files up to 1 megabyte in size._
    This implies the Tellor Oracles should check if there exists a file larger than 1 megabyte in size in the repository of the bounty hunter. If such a file is detected, the tellor should not send the payout signal. This is because the bounty hunter could then hide an attack file in the 1mb+ sized file. Additionally the sponsor should not be allowed to publish files larger than 1 mb in its repo. It would be cheaper to first check if the total repo size is below 1 MB, and only if that is not the case, let the API check all the file sizes separately.
 2. See Travis API point 0. The GitHub (and Travis) API calls should allways be based on an explicit commit.
-
-### Relevant Sources
-
-0. https://blogs.itemis.com/en/secure-your-travis-ci-releases-part-1-checksum-with-sha
