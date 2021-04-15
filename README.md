@@ -4,7 +4,7 @@ TruCol aims at building a decentralized, trust-less platform for test-driven pro
 
 ## Description
 
-Suppose Alice wants some well-defined challenge, e.g. solve an 'n*n' Sudoku, to be solved and writes a set of unit tests that check any solution using random inputs. Instead of creating the solution, Alice publishes the unit tests in a smart contract and sets a bounty for any other smart contract that solves it. Bob the bounty hunter can then see the contract and write a solution in a smart contract and get the reward. This repository presents the protocol to do this completely trustless and decentralised without taking any fees, increasing market efficiency.
+Suppose Alice wants some well-defined challenge, such as an 'n\*n' sudoku, to be solved. She writes a set of unit tests that check any given solution, using random inputs. Instead of creating the solution herself, Alice publishes the unit tests in a smart contract and sets a bounty for any other smart contract that solves it. Bob, the bounty hunter, finds the contract and codes a solution in a smart contract, in order to receive the bounty. If Alice's requirements are fulfilled, the smart contract automatically pays out the reward. This repository presents the protocol to do this completely trustless and decentralised, without taking any fees, thus increasing market efficiency.
 
 ![1](./FAQ/concept.png)
 
