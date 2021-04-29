@@ -1,0 +1,18 @@
+Source: https://docs.tellor.io/tellor/integration/set-up-tellor-core-on-ganache
+
+## Prerequisites
+Requires ganache. To install it (on Ubuntu 20.04) run:
+```
+sudo apt install npm
+npm install -g ganache-cli
+```
+Installation is verified with:
+```
+ganache-cli --version
+```
+Which returns:
+```
+Ganache CLI v6.12.2 (ganache-core: 2.13.2)
+```
+
+## Step 1
