@@ -16,3 +16,37 @@ Ganache CLI v6.12.2 (ganache-core: 2.13.2)
 ```
 
 ## Step 1
+```
+git clone https://github.com/tellor-io/TellorCore.git
+cd TellorCore
+pip install git+https://chromium.googlesource.com/external/gyp
+npm install
+touch .env
+#sudo chown -R 65534:1000 "/root/.npm"
+#npm install -g truffle
+npm i -g --unsafe-perm=true --allow-root truffle
+```
+Next, I changed some of the parameters in the `truffle-config.js` file as the localhost was not found at `localhost` but at `127.0.0.1`, and because the gas costs larger than the block cost set by ganache. I changed the `module.exports` to:
+```
+module.exports = {
+  quiet: true,
+  networks: {
+    development: {
+      host: "127.0.0.1", // changed from localhost to 127.0.0.1
+      port: 8545,
+      network_id: "*",
+      gas: 1000000, // default ganache-cli value, removed a zero
+    },
+```
+Next, I ran:
+```
+truffle compile
+truffle migrate
+```
+
+
+# Note, uninstallation commands are:
+```
+sudo npm uninstall truffle
+```
+Or simply deleting the repo as npm installs packages locally in the repository.
