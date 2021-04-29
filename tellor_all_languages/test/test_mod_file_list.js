@@ -30,7 +30,6 @@ contract("UsingTellor Tests", function (accounts) {
 
   it("Update Price", async function () {
     const requestId = 1; // assumes the first ID of the list of tellor variable contains what we return, e.g. usd/BTC (in our case, checkflag text)
-    // TODO: change the requestId to two strings:
     // 0. the bounty hunter github name
     // 1. The repository name and commit belonging to the sponsor contract
     // OR let the Tellor oracles scrape this data from the sponsor contract to reduce gas costs.
@@ -91,7 +90,6 @@ contract("UsingTellor Tests", function (accounts) {
     deleteFolder(testOutputFolder);
 
     // Manually wait a bit before re-creating folders
-    // TODO: find out why this wait is still required for (build _status_pass)
     await new Promise((resolve) => setTimeout(resolve, 10000));
 
     // (Re-)create temporary test output folder for curled data
@@ -168,7 +166,6 @@ contract("UsingTellor Tests", function (accounts) {
       });
 
     // wait till file is read (it takes a while)
-    // TODO: do not hardcode the build time, but make it dependend on completion of the execCommand function.
     await new Promise((resolve) => setTimeout(resolve, 10000));
 
     // -----------------------------------------Process The Tellor Oracles Data -------------------------------------

@@ -64,7 +64,6 @@ contract("UsingTellor Tests", function (accounts) {
     deleteFolder(testOutputFolder);
 
     // Manually wait a bit before re-creating folders
-    // TODO: find out why this wait is still required for (build _status_pass)
     await new Promise((resolve) => setTimeout(resolve, 10000));
 
     // (Re-)create temporary test output folder for curled data
@@ -106,7 +105,6 @@ contract("UsingTellor Tests", function (accounts) {
       });
 
     // Manually wait a bit unitll the Travis build status is stored into file before proceding.
-    // TODO: do not hardcode the build time, but make it dependend on completion of the execCommand function.
     await new Promise((resolve) => setTimeout(resolve, 10000));
 
     // -----------------------------------------Process The Tellor Oracles Data With Shell ------------------------
@@ -120,7 +118,6 @@ contract("UsingTellor Tests", function (accounts) {
     console.log("");
 
     // encode build status as a number such that it can be passed to the contract
-    // TODO: convert to boolean to save gas costs
     const encodedBuildStatus = helper.encode(curledBuildStatus);
     console.log("encodedBuildStatus");
     console.log(encodedBuildStatus);
