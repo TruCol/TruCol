@@ -1,0 +1,10 @@
+.idea
+./node_modules
+/node_modules
+/build
+.env
+
+**.DS_Store
+
+# ignore temporary output files
+curled_test_data/*
