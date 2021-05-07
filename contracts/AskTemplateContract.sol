@@ -8,10 +8,10 @@ contract AskContract {
     address payable owner;  // Owner of the contract, first this is the sponser.
     uint expiry;        // Get the time when the contract expires.
 
-    constructor() public payable {      // Constructor to initialise values.
+    constructor(uint _expiry) public payable {      // Constructor to initialise values.
         solved = false;         //  Boolean value to indicate if contract is already solved.
         owner = msg.sender;     //  Set the owner of the contract to the creator of the contract.
-        expiry = 1612569800;    //  Unix timestamp of the moment of expiry. 
+        expiry = _expiry;       //  Unix timestamp of the moment of expiry. 
     }
 
     function test(address payable hunter) public payable {
